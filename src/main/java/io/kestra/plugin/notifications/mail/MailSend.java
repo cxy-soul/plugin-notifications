@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 import jakarta.validation.constraints.NotNull;
 
@@ -166,9 +167,7 @@ public class MailSend extends Task implements RunnableTask<VoidOutput> {
         Logger logger = runContext.logger();
 
         logger.debug("Sending an email to {}", to);
-
         final String htmlContent = runContext.render(this.htmlTextContent);
-
         // Building email to send
         EmailPopulatingBuilder builder = EmailBuilder.startingBlank()
             .to(runContext.render(to))
@@ -191,6 +190,8 @@ public class MailSend extends Task implements RunnableTask<VoidOutput> {
         }
 
         Email email = builder.buildEmail();
+        Properties properties = new Properties();
+        properties.put("mail.smtp.class","com.sun.mail.smtp.SMTPTransport");
 
         // Building mailer to send email
         Mailer mailer = MailerBuilder
@@ -202,9 +203,9 @@ public class MailSend extends Task implements RunnableTask<VoidOutput> {
             )
             .withTransportStrategy(transportStrategy)
             .withSessionTimeout(sessionTimeout)
-            // .withDebugLogging(true)
+             .withDebugLogging(true)
+                .withProperties(properties)
             .buildMailer();
-
         mailer.sendMail(email);
 
         return null;

@@ -151,11 +151,12 @@ public class MailSendTest {
 
         Assertions.assertThrows(MailException.class, () -> {
             MailSend mailSend = MailSend.builder()
-                .host("fake-host-unknown.com")
-                .port(465)
-                .from(from)
-                .to(to)
-                .subject(subject)
+                .host("smtpav.travelsky.com.cn")
+                .from("cqrd_bigdata@travelsky.com.cn")
+                .to("xycheng@travelsky.com.cn")
+                .subject("邮件主题")
+                    .username("cqrd_bigdata@travelsky.com.cn")
+                    .password("aaBB@1122")
                 .htmlTextContent(template)
                 .transportStrategy(TransportStrategy.SMTP)
                 .build();
